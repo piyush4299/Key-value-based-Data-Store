@@ -10,8 +10,9 @@ How to run?
  4. Inputs are passed through initialize.py file. If wish to change inputs change through this file.
 
 What this repository is about?
-It is the key value based datastore which satisfies following features mentioned below:
 
+
+It is the key value based datastore which satisfies following features mentioned below:
 ## Functional requirements:
 
 1. It can be initialized using an optional file path. If one is not provided, it will reliably create itself in a reasonable location on the laptop.
