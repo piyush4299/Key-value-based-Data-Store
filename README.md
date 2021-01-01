@@ -2,6 +2,9 @@
 
 It is key value based data store which supports create, read and delete operations on common shared resource(file).
 
+Platform dependencies:- 
+The project is developed on Windows operating System. So, it is advised to run it on Windows machine for better experience.Another dependency would be to use python 3 for running this project.
+ 
 How to run?
 
  1. clone the repository
