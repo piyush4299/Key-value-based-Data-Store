@@ -54,7 +54,6 @@ class DataStore:
                     # then delete entries in data_store till file's size is not under 1 GB.
                     while not self.__utility.is_filesize_limited(self.__fileDetail):
                         self.__store.popitem(last=False)
-                        print("here")
                         write_desc = open(self.__fileDetail,'w')
                         json.dump(self.__store,write_desc)
                         write_desc.close()
