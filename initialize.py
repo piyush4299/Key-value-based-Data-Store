@@ -25,6 +25,7 @@ if __name__ == '__main__':
             print('Enter the folder path: ')
             folder_path = input()
             filename = utility.get_file_name()
+            print(filename)
             if len(folder_path) == 0:
                 raise ValueError
         except ValueError as value_error:
@@ -50,51 +51,40 @@ if __name__ == '__main__':
     
 
     # Input is taken in below format by passing the key value in given two lists.
-    input_key = ["sample_key0","sample_key1"]
-    input_values = [{'name':'Ram','age':'22'},{'name':'Piyush','age':'21'}] 
+    input_key = ["sample_key0","sample_key1","smaple_key2"]
+    input_values = [{'name':'Ram','age':'22'},{'name':'Piyush','age':'21'},{'name':'victor','age':'23'}] 
     
-    '''
-    Consider the object instantiated be one client process if another client process instantiated between execution 
-    of this process then exception will be raised saying permission denied.
-
-    Thus maintined the code for single client process by locking up the file.
-
-    '''
     obj_store = DataStore(file_detail)
     
-    lock = FileLock(file_detail)
-    # This is the part where file is being locked by the object instantiated.
-    with lock:
+    key_ptr,value_ptr = 0,0 
+    while key_ptr < len(input_key) and value_ptr < len(input_values):
+        key = input_key[key_ptr]
+        value = input_values[value_ptr]    
+        # TTL input is optional
+        print("Enter time to leave for given key:")
         try:
-            key_ptr,value_ptr = 0,0 
-            while key_ptr < len(input_key) and value_ptr < len(input_values):
-                key = input_key[key_ptr]
-                value = input_values[value_ptr]    
-                # TTL input is optional
-                print("Enter time to leave for given key:")
-                try:
-                    ttl = input()
-                    if len(ttl) == 0:
-                        ttl = "-1"
-                        raise ValueError
-                except ValueError as value_error:
-                    print("TTL is not provided for this key")
-                finally:
-                    try: 
-                        status = utility.is_valid_data(key,value,ttl)
-                    except ValueError as value_error:
-                        print("Something went wrong with input provided ",value_error)
-                    else:
-                        if status:
-                            # This methods could be called using multiple threads thus increading the performance of code.
-                            # any operation we need to perform we need to pass it through here.
-                            obj_store.create(key,value,ttl)
-                            obj_store.read(key)
-                    key_ptr += 1
-                    value_ptr += 1
-        except Exception as e:
-            # This exception will be raised if another client process interrupts while execution.
-            print("You are not allowed to open a file since lock is acquired by one process ",e)
-    
+            ttl = input()
+            if len(ttl) == 0:
+                ttl = "-1"
+                raise ValueError
+        except ValueError as value_error:
+            print("TTL is not provided for this key")
+        finally:
+            try: 
+                status = utility.is_valid_data(key,value,ttl)
+            except ValueError as value_error:
+                print("Something went wrong with input provided ",value_error)
+            else:
+                if status:
+                    # This methods could be called using multiple threads thus increasing the performance of code.
+                    # any operation we need to perform we need to pass it through here.
+                    obj_store.create(key,value,ttl) 
+                    # If want to see the effect of TTL values then uncomment sleep and adjust duration and insert one more key. 
+                    #time.sleep(4)
+                    obj_store.read(key)
+            key_ptr += 1
+            value_ptr += 1
+        
+        obj_store.delete(input_key[1])
 
 

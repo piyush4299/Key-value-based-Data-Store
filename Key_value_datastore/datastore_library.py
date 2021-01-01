@@ -50,6 +50,18 @@ class DataStore:
                     # Inserting the data into store
                     self.__store[key] = data
                     
+                    # After every insert/create operation check if file limit is above 1GB or not and if it is above 
+                    # then delete entries in data_store till file's size is not under 1 GB.
+                    while not self.__utility.is_filesize_limited(self.__fileDetail):
+                        self.__store.popitem(last=False)
+                        print("here")
+                        write_desc = open(self.__fileDetail,'w')
+                        json.dump(self.__store,write_desc)
+                        write_desc.close()
+                        
+                    # Since store is OrderedDict it would have sorted the keys in their insertion sequence so it has 
+                    # less probability that the item inserted recent is being deleted.
+
                     try:
                         write_desc = open(self.__fileDetail,'w')
                         # Dumping the data into data_storage file
